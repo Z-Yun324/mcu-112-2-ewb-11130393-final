@@ -1,0 +1,17 @@
+<img [src]="imgUrl" />
+
+<div class="content">
+  <strong [class.OnSale]="isSale">{{ id }}.{{ productName }}</strong>
+</div>
+
+<div>{{ authors }}</div>
+
+<div class="company">
+  <span>{{ company }}</span>
+  <span>{{ price | currency }}</span>
+</div>
+
+<div class="button">
+  <button type="button">明細</button>
+  <button type="button" class="shoppingCar">加入購物車</button>
+</div>

@@ -1,13 +1,18 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { ProductCardComponent } from './product-card/product-card.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [ProductCardComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
 export class AppComponent {
-  title = 'mcu-112-2-web-11130393-final';
+  imgUrl = 'https://api.fnkr.net/testimg/200x200/DDDDDD/999999/?text=img';
+  productName = '書籍A';
+  authors = '作者甲、作者乙、作者丙';
+  company = '公司名稱';
+  isSale = true;
+  price = 10000;
 }
