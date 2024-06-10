@@ -4,7 +4,13 @@
   <strong [class.OnSale]="isSale">{{ id }}.{{ productName }}</strong>
 </div>
 
-<div>{{ authors }}</div>
+<div>
+  @for (author of authors; track author) {
+  <span>{{ author }}</span>
+  @if(!$last){
+  <span>、</span>
+  } }
+</div>
 
 <div class="company">
   <span>{{ company }}</span>
@@ -12,6 +18,8 @@
 </div>
 
 <div class="button">
-  <button type="button">明細</button>
-  <button type="button" class="shoppingCar">加入購物車</button>
+  <button type="button" (click)="view.emit()">明細</button>
+  <button type="button" class="shoppingCar" (click)="addCart.emit()">
+    加入購物車
+  </button>
 </div>

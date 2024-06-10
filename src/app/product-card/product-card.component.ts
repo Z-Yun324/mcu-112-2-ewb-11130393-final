@@ -1,7 +1,10 @@
 import { CurrencyPipe } from '@angular/common';
 import {
   Component,
+  EventEmitter,
+  HostBinding,
   Input,
+  Output,
   booleanAttribute,
   numberAttribute,
 } from '@angular/core';
@@ -17,7 +20,7 @@ export class ProductCardComponent {
   @Input({ required: true, transform: numberAttribute }) id!: number;
   @Input() imgUrl!: string;
   @Input() productName!: string;
-  @Input() authors!: string;
+  @Input() authors!: string[];
   @Input() company!: string;
   @Input({ transform: numberAttribute }) price!: number;
   @Input({ transform: booleanAttribute }) isSale!: boolean;
@@ -25,4 +28,12 @@ export class ProductCardComponent {
   OnSale(isSale: boolean): void {
     this.isSale = isSale;
   }
+  @HostBinding('class')
+  class = 'product-card';
+
+  @Output()
+  view = new EventEmitter<void>();
+
+  @Output()
+  addCart = new EventEmitter<void>();
 }
