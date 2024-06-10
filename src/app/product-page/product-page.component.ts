@@ -1,57 +1,29 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subject, startWith, switchMap } from 'rxjs';
 import { Product } from '../model/product';
 import { ProductCardListComponent } from '../product-card-list/product-card-list.component';
+import { ProductService } from '../services/product.service';
 
 @Component({
   selector: 'app-product-page',
   standalone: true,
-  imports: [ProductCardListComponent],
+  imports: [AsyncPipe, ProductCardListComponent],
   templateUrl: './product-page.component.html',
   styleUrl: './product-page.component.css',
 })
 export class ProductPageComponent {
-  products = [
-    new Product({
-      id: 1,
-      imgUrl: 'https://api.fnkr.net/testimg/200x200/DDDDDD/999999/?text=img',
-      name: '書籍A',
-      authors: ['作者甲', '作者乙', '作者丙'],
-      company: '公司名稱',
-      isSale: true,
-      price: 10000,
-    }),
+  //公告資料變動，用在新增、刪除
+  private readonly refresh$ = new Subject<void>();
 
-    new Product({
-      id: 2,
-      imgUrl: 'https://api.fnkr.net/testimg/200x200/DDDDDD/999999/?text=img',
-      name: '書籍B',
-      authors: ['作者甲', '作者乙', '作者丙'],
-      company: '公司名稱',
-      isSale: true,
-      price: 10000,
-    }),
-
-    new Product({
-      id: 3,
-      imgUrl: 'https://api.fnkr.net/testimg/200x200/DDDDDD/999999/?text=img',
-      name: '書籍C',
-      authors: ['作者甲', '作者乙', '作者丙'],
-      company: '公司名稱',
-      isSale: true,
-      price: 10000,
-    }),
-
-    new Product({
-      id: 4,
-      imgUrl: 'https://api.fnkr.net/testimg/200x200/DDDDDD/999999/?text=img',
-      name: '書籍D',
-      authors: ['作者甲', '作者乙', '作者丙'],
-      company: '公司名稱',
-      isSale: true,
-      price: 10000,
-    }),
-  ];
+  //DI 依賴注入
+  private productService = inject(ProductService);
+  //監控products，一旦變動就執行
+  readonly products$ = this.refresh$.pipe(
+    startWith(undefined),
+    switchMap(() => this.productService.getList())
+  );
 
   router = inject(Router);
 
