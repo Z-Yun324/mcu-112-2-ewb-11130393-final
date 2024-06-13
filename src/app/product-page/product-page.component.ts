@@ -23,7 +23,7 @@ export class ProductPageComponent {
   //監控products，一旦變動就執行
   readonly products$ = this.refresh$.pipe(
     startWith(undefined),
-    switchMap(() => this.productService.getList())
+    switchMap(() => this.productService.getList('書籍A', 1, 5))
   );
 
   router = inject(Router);

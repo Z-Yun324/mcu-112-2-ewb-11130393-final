@@ -53,7 +53,11 @@ export class ProductService {
   }*/
 
   //可被監控的
-  getList(): Observable<Product[]> {
+  getList(
+    name: string | undefined,
+    pageIndex: number,
+    pageSize: number
+  ): Observable<Product[]> {
     return of(this._data);
   }
 
