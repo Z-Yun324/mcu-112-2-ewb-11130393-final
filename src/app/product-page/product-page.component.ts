@@ -24,13 +24,23 @@ export class ProductPageComponent {
     { nonNullable: true }
   );
 
+  pageIndex = 1;
+
   //DI 依賴注入
   private productService = inject(ProductService);
+
+  protected pageSize = 5;
 
   //監控products，一旦變動就執行
   readonly products$ = this.refresh$.pipe(
     startWith(undefined),
-    switchMap(() => this.productService.getList('書籍A', 1, 5))
+    switchMap(() => this.productService.getList(undefined, 1, 5))
+  );
+
+  //總頁數監控
+  readonly totalCount$ = this.refresh$.pipe(
+    startWith(undefined),
+    switchMap(() => this.productService.getCount())
   );
 
   router = inject(Router);
