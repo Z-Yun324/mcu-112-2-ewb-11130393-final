@@ -19,6 +19,7 @@ export class ProductPageComponent {
 
   //DI 依賴注入
   private productService = inject(ProductService);
+
   //監控products，一旦變動就執行
   readonly products$ = this.refresh$.pipe(
     startWith(undefined),

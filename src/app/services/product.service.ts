@@ -51,6 +51,7 @@ export class ProductService {
   /*getList(): Product[] {
     return this._data;
   }*/
+
   //可被監控的
   getList(): Observable<Product[]> {
     return of(this._data);
