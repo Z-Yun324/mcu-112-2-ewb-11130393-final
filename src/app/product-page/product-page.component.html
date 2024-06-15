@@ -11,5 +11,5 @@
   (pageIndexChange)="onOageIndexChange($event)"
   [pageSize]="pageSize"
   (view)="onView($event)"
-  (addCart)="onAddCart($event)"
+  (addTo)="shoppingCartService.addProduct($event)"
 ></app-product-card-list>

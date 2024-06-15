@@ -13,6 +13,7 @@ import {
 import { Product } from '../model/product';
 import { ProductCardListComponent } from '../product-card-list/product-card-list.component';
 import { ProductService } from '../services/product.service';
+import { ShoppingCartService } from '../services/shopping-cart.service';
 
 @Component({
   selector: 'app-product-page',
@@ -78,7 +79,8 @@ export class ProductPageComponent {
   );
 
   //DI 依賴注入
-  private productService = inject(ProductService);
+  private readonly productService = inject(ProductService);
+  readonly shoppingCartService = inject(ShoppingCartService);
 
   protected pageSize = 5;
 
@@ -87,9 +89,9 @@ export class ProductPageComponent {
   onView(product: Product): void {
     this.router.navigate(['product', 'view', product.id]);
   }
-  onAddCart(product: Product): void {
+  /*onAddCart(product: Product): void {
     this.router.navigate(['product', 'addCart', product.id]);
-  }
+  }*/
 
   onOageIndexChange(index: number): void {
     console.log(index);

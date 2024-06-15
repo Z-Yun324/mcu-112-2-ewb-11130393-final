@@ -35,5 +35,5 @@ export class ProductCardComponent {
   view = new EventEmitter<void>();
 
   @Output()
-  addCart = new EventEmitter<void>();
+  addTo = new EventEmitter<void>();
 }
