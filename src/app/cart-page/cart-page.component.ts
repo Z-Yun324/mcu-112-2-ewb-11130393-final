@@ -11,6 +11,7 @@ import { map } from 'rxjs';
 import { IOrderDetailForm } from '../interface/order-detail-form.interface';
 import { IOrderForm } from '../interface/order-form.interface';
 import { Product } from '../model/product';
+import { ShoppingCartService } from '../services/shopping-cart.service';
 
 @Component({
   selector: 'app-cart-page',
@@ -21,6 +22,8 @@ import { Product } from '../model/product';
 })
 export class CartPageComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
+
+  readonly shoppingCartService = inject(ShoppingCartService);
 
   form = new FormGroup<IOrderForm>({
     name: new FormControl<string | undefined>(undefined, { nonNullable: true }),
@@ -36,6 +39,8 @@ export class CartPageComponent implements OnInit {
   product!: Product;
 
   ngOnInit(): void {
+    this.setOrderDetail();
+
     this.route.paramMap.subscribe();
 
     this.route.data.subscribe((data) => (this.product = data['product']));
@@ -43,6 +48,21 @@ export class CartPageComponent implements OnInit {
     this.route.data
       .pipe(map((data: Data) => data['product']))
       .subscribe((product) => (this.product = product));
+  }
+
+  setOrderDetail() {
+    for (const item of this.shoppingCartService.data) {
+      const control = new FormGroup<IOrderDetailForm>({
+        id: new FormControl<number>(item.id, { nonNullable: true }),
+        product: new FormControl<Product>(item.product, { nonNullable: true }),
+        count: new FormControl<number>(item.count, { nonNullable: true }),
+        price: new FormControl<number>(item.product.price * item.count, {
+          nonNullable: true,
+        }),
+      });
+
+      this.details.push(control);
+    }
   }
 
   get details(): FormArray<FormGroup<IOrderDetailForm>> {
