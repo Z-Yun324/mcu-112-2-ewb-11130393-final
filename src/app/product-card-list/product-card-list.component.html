@@ -18,5 +18,6 @@
 <app-pagination
   [totalCount]="totalCount"
   [pageSize]="pageSize"
-  [(pageIndex)]="pageIndex"
+  [pageIndex]="pageIndex"
+  (pageIndexChange)="pageIndexChange.emit($event)"
 ></app-pagination>
