@@ -52,7 +52,6 @@
     [disabled]="form.invalid || details.length === 0"
     (click)="onSave()"
   >
-    送出訂單 ()
+    送出訂單 ({{ totalPrice | currency }})
   </button>
-  <pre>{{ shoppingCartService.data | json }}</pre>
 </div>

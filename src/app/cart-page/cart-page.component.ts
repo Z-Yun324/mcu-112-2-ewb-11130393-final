@@ -13,7 +13,6 @@ import { filter, map } from 'rxjs';
 import { IOrderDetailForm } from '../interface/order-detail-form.interface';
 import { IOrderForm } from '../interface/order-form.interface';
 import { Product } from '../model/product';
-import { OrderService } from '../services/order.service';
 import { ShoppingCartService } from '../services/shopping-cart.service';
 
 @Component({
@@ -27,8 +26,6 @@ export class CartPageComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
 
   readonly shoppingCartService = inject(ShoppingCartService);
-
-  private readonly orderService = inject(OrderService);
 
   private readonly destroyRef = inject(DestroyRef);
 
@@ -50,9 +47,9 @@ export class CartPageComponent implements OnInit {
 
   product!: Product;
 
-  ngOnInit(): void {
-    this.setOrderDetail();
+  totalPrice = 0;
 
+  ngOnInit(): void {
     this.route.paramMap.subscribe();
 
     this.route.data.subscribe((data) => (this.product = data['product']));
@@ -60,6 +57,18 @@ export class CartPageComponent implements OnInit {
     this.route.data
       .pipe(map((data: Data) => data['product']))
       .subscribe((product) => (this.product = product));
+
+    this.details.valueChanges
+      .pipe(
+        map((items) =>
+          items.length === 0
+            ? 0
+            : items.reduce((total, item) => total + (item.price || 0), 0)
+        ),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((totalPrice) => (this.totalPrice = totalPrice));
+    this.setOrderDetail();
   }
 
   setOrderDetail() {
