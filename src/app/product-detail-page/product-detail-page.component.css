@@ -51,3 +51,10 @@ button.addCart {
   background-color: #007bff;
   color: white;
 }
+
+.onSale {
+  color: #ff0000;
+}
+.notSale {
+  color: white;
+}

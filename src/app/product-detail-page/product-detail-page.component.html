@@ -20,6 +20,9 @@
   <div>
     <strong>價格</strong>
     <span>{{ product.price | currency }}</span>
+    <strong [class.onSale]="product.isSale" [class.notSale]="!product.isSale">
+      特價</strong
+    >
   </div>
 
   <div class="button">

@@ -25,9 +25,10 @@ export class ProductCardComponent {
   @Input({ transform: numberAttribute }) price!: number;
   @Input({ transform: booleanAttribute }) isSale!: boolean;
 
-  OnSale(isSale: boolean): void {
+  onSale(isSale: boolean): void {
     this.isSale = isSale;
   }
+
   @HostBinding('class')
   class = 'product-card';
 
