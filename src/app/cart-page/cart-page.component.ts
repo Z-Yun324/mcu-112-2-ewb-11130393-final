@@ -1,16 +1,19 @@
 import { CurrencyPipe, JsonPipe } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormArray,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Data } from '@angular/router';
-import { map } from 'rxjs';
+import { filter, map } from 'rxjs';
 import { IOrderDetailForm } from '../interface/order-detail-form.interface';
 import { IOrderForm } from '../interface/order-form.interface';
 import { Product } from '../model/product';
+import { OrderService } from '../services/order.service';
 import { ShoppingCartService } from '../services/shopping-cart.service';
 
 @Component({
@@ -25,13 +28,22 @@ export class CartPageComponent implements OnInit {
 
   readonly shoppingCartService = inject(ShoppingCartService);
 
+  private readonly orderService = inject(OrderService);
+
+  private readonly destroyRef = inject(DestroyRef);
+
   form = new FormGroup<IOrderForm>({
-    name: new FormControl<string | undefined>(undefined, { nonNullable: true }),
+    name: new FormControl<string | undefined>(undefined, {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
     address: new FormControl<string | undefined>(undefined, {
       nonNullable: true,
+      validators: [Validators.required],
     }),
     telephone: new FormControl<string | undefined>(undefined, {
       nonNullable: true,
+      validators: [Validators.required],
     }),
     details: new FormArray<FormGroup<IOrderDetailForm>>([]),
   });
@@ -53,16 +65,49 @@ export class CartPageComponent implements OnInit {
   setOrderDetail() {
     for (const item of this.shoppingCartService.data) {
       const control = new FormGroup<IOrderDetailForm>({
-        id: new FormControl<number>(item.id, { nonNullable: true }),
-        product: new FormControl<Product>(item.product, { nonNullable: true }),
-        count: new FormControl<number>(item.count, { nonNullable: true }),
+        id: new FormControl<number>(item.id, {
+          nonNullable: true,
+        }),
+        product: new FormControl<Product>(item.product, {
+          nonNullable: true,
+        }),
+        count: new FormControl<number>(item.count, {
+          nonNullable: true,
+        }),
         price: new FormControl<number>(item.product.price * item.count, {
           nonNullable: true,
         }),
       });
 
+      control
+        .get('count')!
+        .valueChanges.pipe(
+          filter((value) => value !== undefined),
+          map((value) => value * item.product.price),
+          takeUntilDestroyed(this.destroyRef)
+        )
+        .subscribe((price) =>
+          control.get('price')!.setValue(price, { emitEvent: false })
+        );
+
       this.details.push(control);
     }
+  }
+
+  onSave(): void {
+    console.log('save');
+  }
+
+  get name(): FormControl<string | undefined> {
+    return this.form.get('name') as FormControl<string | undefined>;
+  }
+
+  get address(): FormControl<string | undefined> {
+    return this.form.get('address') as FormControl<string | undefined>;
+  }
+
+  get telephone(): FormControl<string | undefined> {
+    return this.form.get('telephone') as FormControl<string | undefined>;
   }
 
   get details(): FormArray<FormGroup<IOrderDetailForm>> {

@@ -108,6 +108,7 @@ div.delete button {
 .tool-bar button:disabled {
   color: #999;
   border: 1px solid #999;
+  cursor: not-allowed;
 }
 
 span.error-message {
